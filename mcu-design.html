@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -124,8 +124,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#current-design" id="toc-current-design" class="nav-link active" data-scroll-target="#current-design">Current Design</a></li>
+  <li><a href="#original-design" id="toc-original-design" class="nav-link" data-scroll-target="#original-design">Original Design</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -149,8 +156,19 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="current-design" class="level1">
+<h1>Current Design</h1>
+<p>In the project, the MCU was designed to handle parsing and transferring pixel data. A python script grayscaled and downsized a JPEG image so that all the pixel data could fit in the MCU’s SRAM successfully upon runtime at a size of 320x240 pixels. In order for edge detection to be properly applied, a 3x3 kernal was needed to be produced by the MCU according to the Sobel edge detection requirements. The kernal would constantly be updated with different pixel values as it would run across all columns in the image’s first three pixel rows from left to right. The kernal would then be reset to the left side of the image and be translated downward by one row once the kernal reached the last column. Before the kernal would increment to the next set of columns it would cover, the SPI would concatenate the three bytes</p>
+<p>// Finish LAter The first column of data in the kernal was delivered in a 12-bit signal where the most significant nibble in the row represented</p>
+<p>The MCU parsed the pixel data accordingly to build out the 36 bit data frame.</p>
+</section>
+<section id="original-design" class="level1">
+<h1>Original Design</h1>
+<p>Due to complications in communicating with the ArduCAM Mini 2MP Plus camera module, the project had to downsize heavily on the MCU part. Originally, the I2C peripheral would configure two register banks within the OV2640 camera to alter the resolution and output data format to VGA and RGB565 respectively. After the camera was configured, a SPI peripheral would retrieve pixel data from the module. To prevent data from being overwritten, a DMA controller was used to faciliate communication between the two devices without the need for the processor to intervene. This allowed the processor to focus on other tasks effectively creating a semi-concurrent system. Two DMA controllers were used where one was a memory to peripheral transfer system to send clock and fifo-read packets to the camera module while the second controller was a peripheral to memory double buffer reception system. An interrupt was triggered whenever one of the buffers experienced a transaction completed event. The buffer that triggered the event would then give the data within itself to the processor to be converted from RGB565 to grayscale data - a critical step to the overall edge detection method. This is where the current system design would be used in choosing specific nibbles to create the 3x3 kernal as described above. A third DMA channel, memory to peripheral transaction, would retrieve the processed data in the kernal and send it to the FPGA over a second SPI peripheral.</p>
+<p>As mentioned before, the camera module would not deliver reliable output data. At times it would deliver valid data, but more often than not, gibberish would be received. This is more likely due to incorrect configuration. Configuring the register banks were tried manually and with a library to no avail.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

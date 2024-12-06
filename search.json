@@ -1,10 +1,31 @@
 [
   {
+    "objectID": "team.html",
+    "href": "team.html",
+    "title": "Team",
+    "section": "",
+    "text": "Meet the Team!\n\nTroy Kaufman: Troy is an engineering major with a passion for MCU design, and loads of experience with digital design projects. Find him on LinkedIn!\nVikram Krishna: Vikram is a junior double-majoring in Engineering and CS. This year, he is working on the 10xEngineers clinic project to develop RISC-V verification tools. Find him on LinkedIn!\nJoseph Abdelmalek: Joseph is a junior engineering major looking at a future career in medical devices. Find him on LinkedIn!\n\n\n\n\n\nTeam Photo"
+  },
+  {
+    "objectID": "mcu-design.html",
+    "href": "mcu-design.html",
+    "title": "MCU Design",
+    "section": "",
+    "text": "Current Design\nIn the project, the MCU was designed to handle parsing and transferring pixel data. A python script grayscaled and downsized a JPEG image so that all the pixel data could fit in the MCU’s SRAM successfully upon runtime at a size of 320x240 pixels. In order for edge detection to be properly applied, a 3x3 kernal was needed to be produced by the MCU according to the Sobel edge detection requirements. The kernal would constantly be updated with different pixel values as it would run across all columns in the image’s first three pixel rows from left to right. The kernal would then be reset to the left side of the image and be translated downward by one row once the kernal reached the last column. Before the kernal would increment to the next set of columns it would cover, the SPI would concatenate the three bytes\n// Finish LAter The first column of data in the kernal was delivered in a 12-bit signal where the most significant nibble in the row represented\nThe MCU parsed the pixel data accordingly to build out the 36 bit data frame.\n\n\nOriginal Design\nDue to complications in communicating with the ArduCAM Mini 2MP Plus camera module, the project had to downsize heavily on the MCU part. Originally, the I2C peripheral would configure two register banks within the OV2640 camera to alter the resolution and output data format to VGA and RGB565 respectively. After the camera was configured, a SPI peripheral would retrieve pixel data from the module. To prevent data from being overwritten, a DMA controller was used to faciliate communication between the two devices without the need for the processor to intervene. This allowed the processor to focus on other tasks effectively creating a semi-concurrent system. Two DMA controllers were used where one was a memory to peripheral transfer system to send clock and fifo-read packets to the camera module while the second controller was a peripheral to memory double buffer reception system. An interrupt was triggered whenever one of the buffers experienced a transaction completed event. The buffer that triggered the event would then give the data within itself to the processor to be converted from RGB565 to grayscale data - a critical step to the overall edge detection method. This is where the current system design would be used in choosing specific nibbles to create the 3x3 kernal as described above. A third DMA channel, memory to peripheral transaction, would retrieve the processed data in the kernal and send it to the FPGA over a second SPI peripheral.\nAs mentioned before, the camera module would not deliver reliable output data. At times it would deliver valid data, but more often than not, gibberish would be received. This is more likely due to incorrect configuration. Configuring the register banks were tried manually and with a library to no avail."
+  },
+  {
+    "objectID": "documentation.html",
+    "href": "documentation.html",
+    "title": "Documentation",
+    "section": "",
+    "text": "In terms of hardware for our project, we used an FPGA and MCU. Our bill of materials is produced below:\n\n\n\nName\nDescription\nManufacturer\nPart Number/ID\nQuantity\nUnit Price\nLinks\n\n\n\n\nVGA Breakout Board\nFemale Plug to Terminal Block Breakout\nAdafruit\n3124\n1\n$4.50\nAdafruit.com\n\n\nVGA Connector\nMale connectors on either end\nStockroom\nN/A\n1\nStockroom\n\n\n\n\nOur electrical schematic is shown below:\n\n\n\n\nSchematic for Edge Detection System\n\n\n\nOur published source code can be found in our Github repository here.\n\n\n\n\nFPGA Block Diagram"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "E155 Final Project Portfolio Website",
     "section": "",
-    "text": "This repository contains a suggested structure for the final report."
+    "text": "For our final MicroPs project, we combined an FPGA and a microcontroller (MCU) to create an edge detection filter, capable of processing images and outputting the results to a VGA monitor. We chose to process our image data by separating the image capture and image processing to the MCU and FPGA respectively. The MCU handles the image preparation processes like greyscaling to get it ready for edge detection. It then sends the input image data to the FPGA through SPI and allows users to see the edge-detection. The FPGA handles the computationally intensive task of edge detection following a Sobel algorithm. The parallel processing capabilities of the FPGA ensure efficient computation. The processed image data, now highlighting edges, is outputted on the monitor via VGA. Our block diagram for our system is reproduced below:\nCheck out this video to see how it works!"
   },
   {
     "objectID": "index.html#portfolio-contents",
@@ -19,5 +40,12 @@
     "title": "E155 Final Project Portfolio Website",
     "section": "Notes",
     "text": "Notes\n\nDo not upload video files into your Git repo! They are too big. Instead, upload to external video hosting sites (e.g., YouTube or Vimeo) and embed the HTML. You can directly paste the embed HTML code into your Quarto markdown.\nThink of your front page like a pitch. You’re looking to give the reader a quick summary of what your project is and invite them to check it out in more detail.\nHost the portfolio website using Github pages. The most seamless way is to keep all the Quarto source docs inside a docs folder of your project Github repository and run quarto publish from there to render to Github pages. As a reminder, instructions on how to render can be found here."
+  },
+  {
+    "objectID": "results.html",
+    "href": "results.html",
+    "title": "Results",
+    "section": "",
+    "text": "1 VGA\nThe VGA works as intended where there is 2-bit resolution for each color. Theoretically, that means we have access up to 64 colors. The hSync and vSync signals contributing to the VGA’s timing are extremely accurate. The VGA was one of the earliest specs completed in the project, and it has helped us debug other specs.\n\n\n2 Camera Interface with I2C and SPI\nBefore the camera was scrapped from the project, I2C initialization and write functions worked as intended in setting up the output format. No unknown decoded bits were found while I2C transfered data. The SPI peripheral worked as intended in receiving pixel data from the camera module. However, the ouput data from the camera module was very inconsistent which can be attributed to the configuration setup within the two internal register banks. We manually configured registers by looking at the datasheet, and used a library available to the public. However, the camera’s reliability did not change. We do not use I2C now, but we still use SPI and it works properly.\n\n\n3 Sobel Edge Detection Algorithm\nThe alogrithm works in simulation, however, we are experiencing trouble with the synthesized version on the FPGA. On the VGA, the monitor is filled in with black and white pixels (not gray anymore). We know that there is a communication issue between the MCU and FPGA that could heavily affect the edge detection algorithm. We believe that the FPGA is not receiving valid data.\n\n\n4 DMA and Double Buffer\nBefore the camera was scrapped from the project the DMA and double buffer system worked worked well. In total, three DMA channels were utilized (2x memory to peripheral and 1x peripheral to memory). The first memory to peripheral DMA transaction sends clock and read fifo command packets to the camera module. The one and only peripheral to memory DMA transaction used a doubler buffer system to avoid overwriting data. A handful of pointers were used in this operation, and data transfers worked seamlessly within memory. The final DMA channel took the preprocessed pixel data and sent it over SPI successfully. However, the camera module was scrapped from the project, so we are not using the DMA controller nor double buffer system currently.\n\n\n5 SPRAM, BRAM, and SPI on FPGA\nThe SPRAM, BRAM, and SPI on the FPGA work as intended. The square root look up table fits nicely within the BRAM. The SPRAM holds the entire edge detected image without conflict, and it can be read and written to without causing any setup time violations when synthesized."
   }
 ]
