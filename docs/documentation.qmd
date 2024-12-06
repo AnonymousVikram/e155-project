@@ -1,3 +1,28 @@
 ---
 title: Documentation
 ---
+
+
+In terms of hardware for our project, we used an FPGA and MCU. Our bill of materials is produced below:
+
+
+| Name | Description | Manufacturer | Part Number/ID | Quantity | Unit Price | Links |
+|------------------------|-----------------------------------------------|--------------|----------------|----------|------------|-------------------------------------------|
+| VGA Breakout Board | Female Plug to Terminal Block Breakout | Adafruit | 3124 | 1 | $4.50 | [Adafruit.com](https://www.adafruit.com/product/3124) |
+| VGA Connector | Male connectors on either end | Stockroom | N/A | 1 | Stockroom |  |
+
+
+Our electrical schematic is shown below:
+
+
+:::{.figure}
+![Schematic for Edge Detection System](images/schematic.png)
+:::
+
+
+Our published source code can be found in our Github repository [here](https://https://github.com/troyrkaufman/e155_edge_detection_hardware_accelerator).
+
+
+:::{.figure}
+![FPGA Block Diagram](images/blockdiagram.jpg)
+:::

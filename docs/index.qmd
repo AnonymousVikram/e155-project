@@ -2,6 +2,64 @@
 title: "E155 Final Project Portfolio Website"
 ---
 
+
+
+
+
+For our final MicroPs project, we combined an FPGA and a microcontroller (MCU) to create an edge detection filter, capable of processing images and outputting the results to a VGA monitor. We chose to process our image data by separating the image capture and image processing to the MCU and FPGA respectively. The MCU handles the image preparation processes like greyscaling to get it ready for edge detection. It then sends the input image data to the FPGA through SPI and allows users to see the edge-detection. The FPGA handles the computationally intensive task of edge detection following a Sobel algorithm. The parallel processing capabilities of the FPGA ensure efficient computation. The processed image data, now highlighting edges, is outputted on the monitor via VGA. Our block diagram for our system is reproduced below:
+
+
+
+
+:::{.figure}
+![Block Diagram of Edge Detection System](images/block-diagram.png)
+:::
+
+
+Check out **this** video to see how it works!
+
+
+# Table of Contents
+Want more information? Check out the other resources below:
+- [Documentation](documentation.qmd)  
+  A comprehensive overview of the project, including its objectives, scope, and key technical challenges.  
+
+
+- [FPGA Design](fpga-design.qmd)  
+  Detailed insights into the FPGA implementation, including the edge detection algorithm, logic design, and VGA output module.  
+
+
+- [MCU Design](mcu-design.qmd)  
+  An explanation of the MCU's role in system integration, user interface management, and data handling.  
+
+
+- [Results](results.qmd)  
+  A presentation of the project's outcomes, including test results, performance benchmarks, and processed images.  
+
+
+- [Team](team.qmd)  
+  Meet the team behind the project, with details on individual contributions and collaboration efforts.  
+
+
+A special thanks to Prof. Brake and the MicroPs grutors for helping us with this amazing project!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This repository contains a suggested structure for the final report.
 
 ## Portfolio Contents
