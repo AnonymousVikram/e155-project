@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -159,24 +159,24 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="current-design" class="level1">
 <h1>Current Design</h1>
-<p>In the project, the MCU was designed to parse and transfer pixel data. A python script greyscaled and downsized a JPEG image so that all the pixel data could fit in the MCU’s SRAM successfully upon runtime at a size of 320x240 pixels. In order for edge detection to be properly applied in the FPGA, the MCU needed to transmit a 3x3 kernel of nibbles. This was performed by sending a series of 12-bit packets over the SPI peripheral where each represented one of the image’s columns and within that three consecutive rows of data.</p>
+<p>In the project, the MCU was designed to parse and transfer pixel data. A python script grayscaled and downsized a JPEG image so that all the pixel data could fit in the MCU’s SRAM successfully upon runtime at a size of 320x240 pixels. In order for edge detection to be properly applied in the FPGA, the MCU needed to transmist a 3x3 kernal of nibbles. This was perfomed by sending a series of 12-bit packets over the SPI peripheral where each represented one of the image’s columns and within that three consecutive rows of data.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/mcu_transfer.png" class="img-fluid figure-img"></p>
-<figcaption>The MCU Transferring a 12-bit Data packet to the FPGA to create the 3x3 kernel</figcaption>
+<figcaption>The MCU Transferring a 12-bit Data packet to the FPGA to create the 3x3 Kernal</figcaption>
 </figure>
 </div>
-<p>After each kernel is transmitted, the new kernel of data would shift over one column within the image, thus, sending a new 3x3 kernel. Once the the kernel has reached the end of the 240 columns, the matrix would be reset back to the 0th column and shifted down by 1 row.</p>
+<p>After each kernal is transmitted, the new kernal of data would shift over one column within the image, thus, sending a new 3x3 kernal. Once the the kernal has reached the end of the 240 columns, the matrix would be reset back to the 0th column and shifted down by 1 row.</p>
 </section>
 <section id="original-design" class="level1">
 <h1>Original Design</h1>
 <p>Due to complications in communicating with the ArduCAM Mini 2MP Plus camera module, the project had to downsize heavily on the MCU part. Originally, the I2C peripheral would configure two register banks within the OV2640 camera to alter the resolution and output data format to VGA and RGB565 respectively. After the camera was configured, a SPI peripheral would retrieve pixel data from the module.</p>
-<p>To prevent data from being overwritten, a DMA controller facilitated communication between the camera module and the MCU without the need for the processor to intervene. This allowed the processor to focus on other tasks effectively creating a semi-concurrent system. Two DMA channels were used where one was a memory to peripheral transfer system to send clock and fifo-read packets to the camera module while the second channel was a peripheral to memory double buffer reception system. An interrupt was triggered whenever one of the buffers experienced a transaction completed event.</p>
-<p>The buffer that triggered the event would then transfer data to the processor to be converted from RGB565 to greyscale data - a critical step to the overall edge detection method. This is where the current system design would be used in choosing specific nibbles to create the 3x3 kernel would be implemented as described above. A third DMA channel, a memory to peripheral transaction, would retrieve the processed data and send it to the FPGA to develop the kernel with a total of three 12-bit data packets.</p>
+<p>To prevent data from being overwritten, a DMA controller faciliated communication between the camera module and the MCU without the need for the processor to intervene. This allowed the processor to focus on other tasks effectively creating a semi-concurrent system. Two DMA channels were used where one was a memory to peripheral transfer system to send clock and fifo-read packets to the camera module while the second channel was a peripheral to memory double buffer reception system. An interrupt was triggered whenever one of the buffers experienced a transaction completed event.</p>
+<p>The buffer that triggered the event would then transfer data to the processor to be converted from RGB565 to grayscale data - a critical step to the overall edge detection method. This is where the current system design would be used in choosing specific nibbles to create the 3x3 kernal would be implemented as described above. A third DMA channel, a memory to peripheral transaction, would retrieve the processed data and send it to the FPGA to develop the kernal with a total of three 12-bit data packets.</p>
 </section>
 <section id="camera-module-reflection" class="level1">
 <h1>Camera Module Reflection</h1>
-<p>As mentioned before, the camera module would not deliver reliable output data. At times it would deliver valid data, but more often than not, gibberish would be received. This is more likely due to incorrectly configuring the camera module. We manually tried to configure the camera with known register settings with some success. We also reconfigured a public library for a STM32 ArduCAM Mini 2MP Plus camera module configurations to no avail. On the vendor’s website, we noticed that there was conflicting documentation concerning the SPI peripheral’s clock phase. If there was a major mistake like this, why wouldn’t there be more mistakes within the documentation? This led the team to drop the camera module from the project two days before the official checkoff.</p>
+<p>As mentioned before, the camera module would not deliver reliable output data. At times it would deliver valid data, but more often than not, gibberish would be received. This is more likely due to incorrectly configurating the camera module. We manually tried to configure the camera with known register settings with some success. We also reconfigured a public library for a STM32 ArduCAM Mini 2MP Plus camera module congigurations to no avail. On the vendor’s website, we noticed that there was conflicting documentation concerning the SPI peripheral’s clock phase. If there was a major mistake like this, why wouldn’t there be more mistakes within the documentation? This led the team to drop the camera module from the project two days before the official checkoff.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/valid_pixel_data.png" class="img-fluid figure-img"></p>
