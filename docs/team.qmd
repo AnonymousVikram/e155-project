@@ -9,8 +9,3 @@ title: Team
 - **Troy Kaufman:** Troy is an engineering major with a passion for digital design, and loads of experience with embedded system projects. Find him on [LinkedIn](https://www.linkedin.com/in/troy-kaufman-152b41248/)!
 - **Vikram Krishna:** Vikram is a junior double-majoring in Engineering and CS. This year, he is working on the 10xEngineers clinic project to develop RISC-V verification tools. Find him on [LinkedIn](https://www.linkedin.com/in/v-krishna/)!
 - **Joseph Abdelmalek:** Joseph is a junior engineering major looking at a future career in medical devices. Find him on [LinkedIn](https://www.linkedin.com/in/joseph-abdelmalek)!
-
-
-:::{.figure}
-![Team Photo](images/team.png)
-:::

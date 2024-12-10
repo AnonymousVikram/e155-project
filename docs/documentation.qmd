@@ -25,5 +25,5 @@ Our published source code can be found in our Github repository [here](https://h
 
 
 :::{.figure}
-![FPGA Block Diagram](images/blockdiagram.jpg)
+![FPGA Block Diagram](images/fpgaBlocks.jpg)
 :::
