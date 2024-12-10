@@ -2,6 +2,8 @@
 title: Results
 ---
 
+# Project Demonstration
+{{< video https://youtu.be/KCz5reZwGr8 >}}
 
 # 1 VGA 
 The VGA works as intended where there is 2-bit resolution for each color. Theoretically, that means we have access up to 64 colors. The hSync and vSync signals contributing to the VGA's timing are extremely accurate. The VGA was one of the earliest specs completed in the project, and it has helped us debug other specs. 

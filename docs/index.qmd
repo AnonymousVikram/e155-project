@@ -12,7 +12,7 @@ For our final MicroPs project, we combined an FPGA and a microcontroller (MCU) t
 
 
 :::{.figure}
-![Block Diagram of Edge Detection System](../images/block-diagram.png)
+![Block Diagram of Edge Detection System](images/block-diagram.png)
 :::
 
 
