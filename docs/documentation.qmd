@@ -2,6 +2,7 @@
 title: Documentation
 ---
 
+Our new piece of hardware that we attempted to incorporate into our design was the ArduCAM Mini 2MP camera module that incoprated an OV2640 camera. The camera itself has two internal bank registers that allowed the user to configure the camera settings such as resolution and output format. The module produce by ArduCAM incorporated another bank of registers that allowed users to quickly configure and access data. 
 
 In terms of hardware for our project, we used an FPGA and MCU. Our bill of materials is produced below:
 
