@@ -79,8 +79,15 @@ There was also a buffer system implemented to account for the fact that there ar
 
 The SPI IP provided by Lattice was not ideal for our purposes, and as a result, we designed our own SPI module as well. Taking in a clock, and a single data line, the SPI module would read in data from the MCU and store it in registers. These registers would then be processed by the Sobel edge detection algorithm, and stored in the SPRAM.
 
+# Result
+
+Although the MCU didn't quite work out, we were able to load the FPGA with a rectangle that was processed by the Sobel edge detection algorithm. The VGA output was stable and the edge detection performed well. The SPRAM logic was also implemented to store the processed image data and enable reading and writing from the RAM.
+
+We loaded it with the outline of a rectangle, and applying the Sobel filter to this should result in two rectangles, one on the outside to show the gradient from the background to the rectangle, and one on the inside to show the gradient from the rectangle to the blank inside the rectangle. This can be seen in the image below:
+![Sobel Edge Detection on Rectangle](images/edges.jpg)
+
 # Conclusion
 
 The FPGA implementation of the edge detection algorithm was successful in processing the image data and outputting the processed image data to a VGA monitor. The pipeline architecture allowed for high throughput and efficient computation, and the VGA output module generated the VGA signals required by the monitor. The SPRAM logic was also implemented to store the processed image data and enable reading and writing from the RAM. 
 
-Overall, the design does a good job of maintaining performance and dilineating the tasks of the FPGA. The output to the monitor was stable and the edge detection performed well!
+Overall, the design does a good job of maintaining performance and delineating the tasks of the FPGA. The output to the monitor was stable and the edge detection performed well!
