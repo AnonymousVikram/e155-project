@@ -33,6 +33,17 @@ The FPGA effectively had three overarching tasks:
 
 To aid in this, the values from the Sobel kernel were stored in a RAM, and the image data was stored in registers. The FPGA then processed the image data using the Sobel algorithm and outputted the processed image data to the VGA monitor.
 
+## Overall Architecture
+
+To gain an overarching idea of the FPGA design, @fig-blocks below shows the main components of the FPGA design:
+
+:::{#fig-blocks}
+![](images/fpgaBlocks.jpg)
+
+Block Diagram of FPGA Design
+:::
+
+
 ## Sobel Edge Detection Algorithm
 
 The edge detection algorithm was implemented using a 5-stage pipeline. The pipeline was designed to process one pixel per clock cycle, allowing for high throughput and efficient computation. The pipeline stages were as follows:
