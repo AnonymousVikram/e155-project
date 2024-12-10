@@ -162,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
 <p>In the project, the MCU was designed to parse and transfer pixel data. A python script grayscaled and downsized a JPEG image so that all the pixel data could fit in the MCU’s SRAM successfully upon runtime at a size of 320x240 pixels. In order for edge detection to be properly applied in the FPGA, the MCU needed to transmist a 3x3 kernal of nibbles. This was perfomed by sending a series of 12-bit packets over the SPI peripheral where each represented one of the image’s columns and within that three consecutive rows of data.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../images/mcu_transfer.png" class="img-fluid figure-img"></p>
+<p><img src="images/mcu_transfer.png" class="img-fluid figure-img"></p>
 <figcaption>The MCU Transferring a 12-bit Data packet to the FPGA to create the 3x3 Kernal</figcaption>
 </figure>
 </div>
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
 <p>As mentioned before, the camera module would not deliver reliable output data. At times it would deliver valid data, but more often than not, gibberish would be received. This is more likely due to incorrectly configurating the camera module. We manually tried to configure the camera with known register settings with some success. We also reconfigured a public library for a STM32 ArduCAM Mini 2MP Plus camera module congigurations to no avail. On the vendor’s website, we noticed that there was conflicting documentation concerning the SPI peripheral’s clock phase. If there was a major mistake like this, why wouldn’t there be more mistakes within the documentation? This led the team to drop the camera module from the project two days before the official checkoff.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../images/valid_pixel_data.png" class="img-fluid figure-img"></p>
+<p><img src="images/valid_pixel_data.png" class="img-fluid figure-img"></p>
 <figcaption>The Camera Module’s Pixel Data in RGB565 Format Showing a Forest Green Color (0x2A and 0xA2) as Desired</figcaption>
 </figure>
 </div>
