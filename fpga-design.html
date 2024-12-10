@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -66,7 +66,39 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.scss">
 </head>
@@ -124,8 +156,28 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a>
+  <ul class="collapse">
+  <li><a href="#sobel-edge-detection" id="toc-sobel-edge-detection" class="nav-link" data-scroll-target="#sobel-edge-detection">Sobel Edge Detection</a></li>
+  <li><a href="#vga-display" id="toc-vga-display" class="nav-link" data-scroll-target="#vga-display">VGA Display</a></li>
+  </ul></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a>
+  <ul class="collapse">
+  <li><a href="#overall-architecture" id="toc-overall-architecture" class="nav-link" data-scroll-target="#overall-architecture">Overall Architecture</a></li>
+  <li><a href="#sobel-edge-detection-algorithm" id="toc-sobel-edge-detection-algorithm" class="nav-link" data-scroll-target="#sobel-edge-detection-algorithm">Sobel Edge Detection Algorithm</a></li>
+  <li><a href="#vga-output-module" id="toc-vga-output-module" class="nav-link" data-scroll-target="#vga-output-module">VGA Output Module</a></li>
+  <li><a href="#spram-logic" id="toc-spram-logic" class="nav-link" data-scroll-target="#spram-logic">SPRAM Logic</a></li>
+  <li><a href="#spi-communication" id="toc-spi-communication" class="nav-link" data-scroll-target="#spi-communication">SPI Communication</a></li>
+  </ul></li>
+  <li><a href="#result" id="toc-result" class="nav-link" data-scroll-target="#result">Result</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -149,8 +201,101 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>FPGA (Field Programmable Gate Array) is a type of integrated circuit that can be programmed after manufacturing. It is a reconfigurable device that can be used to implement digital logic circuits. FPGAs are used in a wide range of applications, including digital signal processing, networking, and embedded systems.</p>
+<p>One of the big advantages of FPGAs is that they can be reprogrammed to implement different functions. This makes them very flexible and allows designers to quickly prototype and test new designs. FPGAs are also very fast and can be used to implement high-performance digital systems.</p>
+<section id="sobel-edge-detection" class="level2">
+<h2 class="anchored" data-anchor-id="sobel-edge-detection">Sobel Edge Detection</h2>
+<p>The Sobel edge detection algorithm is a popular image processing technique that is used to detect edges in images. It works by convolving the image with a pair of 3x3 convolution kernels to calculate the gradient of the image intensity at each pixel. The magnitude of the gradient is then used to determine if the pixel is part of an edge.</p>
+<p>The kernel is weighed and can be seen below:</p>
+<pre><code>-1  0  1
+-2  0  2
+-1  0  1</code></pre>
+</section>
+<section id="vga-display" class="level2">
+<h2 class="anchored" data-anchor-id="vga-display">VGA Display</h2>
+<p>VGA (Video Graphics Array) is a standard for displaying video on a computer monitor. It uses an analog signal to transmit the video data to the monitor. VGA displays are commonly used in embedded systems and other applications where a high-quality display is required.</p>
+</section>
+</section>
+<section id="implementation" class="level1">
+<h1>Implementation</h1>
+<p>The FPGA effectively had three overarching tasks: 1. Receive image data from the MCU 2. Process the image data using the Sobel edge detection algorithm 3. Output the processed image data to a VGA monitor</p>
+<p>To aid in this, the values from the Sobel kernel were stored in a RAM, and the image data was stored in registers. The FPGA then processed the image data using the Sobel algorithm and outputted the processed image data to the VGA monitor.</p>
+<section id="overall-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="overall-architecture">Overall Architecture</h2>
+<p>To gain an overarching idea of the FPGA design, <a href="#fig-blocks" class="quarto-xref">Figure&nbsp;1</a> below shows the main components of the FPGA design:</p>
+<div id="fig-blocks" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-blocks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fpgaBlocks.jpg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-blocks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Block Diagram of FPGA Design
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="sobel-edge-detection-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="sobel-edge-detection-algorithm">Sobel Edge Detection Algorithm</h2>
+<p>The edge detection algorithm was implemented using a 5-stage pipeline. The pipeline was designed to process one pixel per clock cycle, allowing for high throughput and efficient computation. The pipeline stages were as follows:</p>
+<ol type="1">
+<li><strong>Sum of Rows and Columns</strong>: The input pixel values were multiplied by the Sobel kernel values and summed to calculate the gradient in the x and y directions.</li>
+<li><strong>Gradient Magnitude</strong>: The gradient values in the x and y directions were calculated from the sum of rows and columns.</li>
+<li><strong>Squaring and Summing</strong>: The gradient values were squared and summed to calculate the magnitude of the gradient.</li>
+<li><strong>Square Root</strong>: The square root of the gradient magnitude was calculated to determine if the pixel was part of an edge.</li>
+<li><strong>Bit Compression</strong>: The gradient magnitude was compressed to 2 bits to reduce the amount of data that needed to be transmitted to the VGA monitor and stored in memory.</li>
+</ol>
+<p>The first three steps were relatively straightforward, with basic arithmetic using adders and multipliers. The square root calculation was more complex and required a lookup table to approximate the square root function. To that end, a Python script was created to generate the square roots for all values from 0 - 7200. The maximum value was calculated by inputting theoretical maximum gradient values into the Sobel kernel. This lookup table was then stored in the BRAM on the FPGA for quick near-instantaneous access.</p>
+<p>Further, the Bit Compression step was implemented to reduce the amount of data that needed to be transmitted to the VGA monitor and stored in memory. The output of the square root BRAM was compressed to 2 bits using a simple thresholding function:</p>
+<p><span class="math inline">\(\text{Output} = \begin{cases} 00 &amp; \text{Input} \leq 21 \\ 01 &amp; 21 &lt; \text{Input} \leq 42 \\ 10 &amp; 42 &lt; \text{Input} \leq 63 \\ 11 &amp; \text{Input}  &gt; 63 \end{cases}\)</span></p>
+<p>These threshold values were determined as the maximum output of the square root function was 84. So, despite being stored in a 6-bit register with a theoretical maximum of 127, these values maximize the dynamic range of the output.</p>
+<p>By putting registers in between each stage of the pipeline, the FPGA was able to process one pixel per clock cycle, allowing for high throughput and efficient computation. Although with the time delay of receiving new image data from the MCU over SPI this would be slowed down, registers are also added to store the current x and y pixel values to ensure that the correct pixel is processed and stored in the SPRAM.</p>
+</section>
+<section id="vga-output-module" class="level2">
+<h2 class="anchored" data-anchor-id="vga-output-module">VGA Output Module</h2>
+<p>The VGA output module was responsible for displaying the processed image data on a VGA monitor. The module was designed to output a 640x480 image with a resolution of 800x600 pixels. The module used a single-port RAM to store the processed image data and a VGA controller to generate the VGA signal.</p>
+<p>The VGA controller generated the horizontal and vertical sync signals and the pixel clock signal required by the VGA monitor. The controller also generated the pixel address for the RAM based on the current horizontal and vertical sync signals. The processed image data was read from the RAM and outputted to the VGA monitor.</p>
+<p>The VGA output module was implemented using a state machine that controlled the timing of the VGA signals and the reading of the processed image data from the RAM.</p>
+</section>
+<section id="spram-logic" class="level2">
+<h2 class="anchored" data-anchor-id="spram-logic">SPRAM Logic</h2>
+<p>Although reading/writing from a SPRAM seems straightforward, the logic to enable this functionality actually ended up being non-trivial. This is primarily due to the strict timing constraints of the VGA output module. The VGA output module requires a pixel to be output every 40ns, which is the time it takes for the VGA monitor to display a pixel. This meant that the clock going into the SPRAM had to be twice as fast, at 50MHz. Further, the SPRAM had a write mask input that allows the user to write to specific 4-bit fields in the SPRAM. However, since we decided to store 2 bits per pixel (4 bits would’ve resulted in not enough SPRAM), we had to write to the SPRAM in 2 cycles. This resulted in a 4-state FSM that looked like this:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">graph TD
+    A((VGA Read)) --&gt; B((Load Line))
+    B --&gt; C((VGA Read))
+    C --&gt; D((Write to RAM))
+    D --&gt; A
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>There was also a buffer system implemented to account for the fact that there are no guarantees that the SPI clock would divide the FPGA’s clock evenly. This buffer system would store the pixel data in a buffer any time an input is detected, and it would be processed and stored in the RAM in the next possible FSM cycle.</p>
+</section>
+<section id="spi-communication" class="level2">
+<h2 class="anchored" data-anchor-id="spi-communication">SPI Communication</h2>
+<p>The SPI IP provided by Lattice was not ideal for our purposes, and as a result, we designed our own SPI module as well. Taking in a clock, and a single data line, the SPI module would read in data from the MCU and store it in registers. These registers would then be processed by the Sobel edge detection algorithm, and stored in the SPRAM.</p>
+</section>
+</section>
+<section id="result" class="level1">
+<h1>Result</h1>
+<p>Although the MCU didn’t quite work out, we were able to load the FPGA with a rectangle that was processed by the Sobel edge detection algorithm. The VGA output was stable and the edge detection performed well. The SPRAM logic was also implemented to store the processed image data and enable reading and writing from the RAM.</p>
+<p>We loaded it with the outline of a rectangle, and applying the Sobel filter to this should result in two rectangles, one on the outside to show the gradient from the background to the rectangle, and one on the inside to show the gradient from the rectangle to the blank inside the rectangle. This can be seen in the image below: <img src="images/edges.jpg" class="img-fluid" alt="Sobel Edge Detection on Rectangle"></p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>The FPGA implementation of the edge detection algorithm was successful in processing the image data and outputting the processed image data to a VGA monitor. The pipeline architecture allowed for high throughput and efficient computation, and the VGA output module generated the VGA signals required by the monitor. The SPRAM logic was also implemented to store the processed image data and enable reading and writing from the RAM.</p>
+<p>Overall, the design does a good job of maintaining performance and delineating the tasks of the FPGA. The output to the monitor was stable and the edge detection performed well!</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
